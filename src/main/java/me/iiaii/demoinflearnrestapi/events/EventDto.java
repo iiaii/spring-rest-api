@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
@@ -16,13 +17,13 @@ public class EventDto {
     private String name;
     @NotEmpty
     private String description;
-    @NotEmpty
+    @NotNull
     private LocalDateTime beginEnrollmentDateTime;
-    @NotEmpty
+    @NotNull
     private LocalDateTime closeEnrollmentDateTime;
-    @NotEmpty
+    @NotNull
     private LocalDateTime beginEventDateTime;
-    @NotEmpty
+    @NotNull
     private LocalDateTime endEventDateTime;
     private String location; // (optional) 이게 없으면 온라인 모임 ​
     @Min(0)

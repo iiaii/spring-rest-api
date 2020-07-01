@@ -42,8 +42,8 @@ public class EventControllerTests {
     public void createEvent() throws Exception {
         // given
         EventDto event = EventDto.builder()
-                .name("Srping")
-                .description("REST API Devleopment with Spring")
+                .name("Spring")
+                .description("REST API Development with Spring")
                 .beginEnrollmentDateTime(LocalDateTime.of(2018, 11, 23, 13, 21))
                 .closeEnrollmentDateTime(LocalDateTime.of(2018, 11, 24, 13, 21))
                 .beginEventDateTime(LocalDateTime.of(2018, 11, 25, 13, 21))
@@ -69,7 +69,6 @@ public class EventControllerTests {
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
                 .andExpect(jsonPath("id").value(Matchers.not(100)))
                 .andExpect(jsonPath("free").value(Matchers.not(true)))
-                .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT))
         ;
      }
 
@@ -77,8 +76,8 @@ public class EventControllerTests {
     public void createEvent_Bad_Request() throws Exception {
         // given
         Event event = Event.builder()
-                .name("Srping")
-                .description("REST API Devleopment with Spring")
+                .name("Spring")
+                .description("REST API Development with Spring")
                 .beginEnrollmentDateTime(LocalDateTime.of(2018, 11, 23, 13, 21))
                 .closeEnrollmentDateTime(LocalDateTime.of(2018, 11, 24, 13, 21))
                 .beginEventDateTime(LocalDateTime.of(2018, 11, 25, 13, 21))
@@ -122,4 +121,31 @@ public class EventControllerTests {
 
     }
 
+    @Test
+    public void createEvent_Bad_Request_Wrong_Input() throws Exception {
+        // given
+        EventDto event = EventDto.builder()
+                .name("Spring")
+                .description("REST API Development with Spring")
+                .beginEnrollmentDateTime(LocalDateTime.of(2018, 11, 26, 13, 21))
+                .closeEnrollmentDateTime(LocalDateTime.of(2018, 11, 25, 13, 21))
+                .beginEventDateTime(LocalDateTime.of(2018, 11, 24, 13, 21))
+                .endEventDateTime(LocalDateTime.of(2018, 11, 23, 13, 21))
+                .basePrice(100)
+                .maxPrice(200)
+                .limitOfEnrollment(100)
+                .location("삼성역")
+                .build();
+
+        this.mockMvc.perform(post("/api/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(event)))
+                .andExpect(status().isBadRequest());
+
+        // when
+
+
+        // then
+
+    }
 }
