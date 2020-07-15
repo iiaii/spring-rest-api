@@ -1,4 +1,4 @@
-package index;
+package me.iiaii.demoinflearnrestapi.index;
 
 import me.iiaii.demoinflearnrestapi.events.EventController;
 import org.springframework.hateoas.RepresentationModel;
