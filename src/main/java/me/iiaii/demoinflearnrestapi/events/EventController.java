@@ -9,12 +9,14 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
 import javax.validation.Valid;
+import java.awt.print.Pageable;
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -57,6 +59,11 @@ public class EventController {
         eventResource.add(selfLinkBuilder.withRel("update-event"));
         eventResource.add(new Link("/docs/index.html#resources-events-create").withRel("profile"));
         return ResponseEntity.created(createdUri).body(eventResource);
+    }
+
+    @GetMapping
+    public ResponseEntity queryEvents(Pageable pageable) {
+        return ResponseEntity.ok().body(this.eventRepository.findAll((org.springframework.data.domain.Pageable) pageable));
     }
 
     private ResponseEntity badRequest(Errors errors) {
