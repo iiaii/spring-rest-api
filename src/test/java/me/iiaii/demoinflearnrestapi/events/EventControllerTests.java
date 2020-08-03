@@ -230,7 +230,7 @@ public class EventControllerTests {
         IntStream.range(0,30).forEach(this::generateEvent);
 
         // when
-        this.mockMvc.perform(get("/api/events")
+            this.mockMvc.perform(get("/api/events")
                         .param("page","1")
                         .param("size","10")
                         .param("sort", "name,DESC")
@@ -238,6 +238,10 @@ public class EventControllerTests {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("page").exists())
+                .andExpect(jsonPath("_embedded.eventList[0]._links.self").exists())
+                .andExpect(jsonPath("_link.self").exists())
+                .andExpect(jsonPath("_link.profile").exists())
+                .andDo(document("query-events"))
         ;
 
 
@@ -247,7 +251,7 @@ public class EventControllerTests {
 
     private void generateEvent(int index) {
         Event event = Event.builder()
-                .name("evnet" + index)
+                .name("event" + index)
                 .description("test event")
                 .build();
 
