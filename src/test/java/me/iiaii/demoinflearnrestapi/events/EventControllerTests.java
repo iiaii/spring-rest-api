@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 
 @RunWith(SpringRunner.class)
@@ -272,11 +273,21 @@ public class EventControllerTests {
     @TestDescription("없는 이벤트를 조회했을때 404")
     public void getEvent404() throws Exception {
         // given
+        // when
+        // then
         this.mockMvc.perform(get("/api/events/1089"))
                 .andExpect(status().isNotFound())
         ;
+    }
+
+    @Test
+    @TestDescription("이벤트 수정 하기")
+    public void modifyEvent() throws Exception {
+        // given
+        Event event = this.generateEvent(10);
 
         // when
+        this.mockMvc.perform(put("/api/event/{id}").param, event.getId())
 
 
         // then
