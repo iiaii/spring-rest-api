@@ -14,14 +14,12 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -73,6 +71,20 @@ public class EventController {
         return ResponseEntity
                 .ok(entityModels);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getEvent(@PathVariable Integer id) {
+        Optional<Event> findEvent = this.eventRepository.findById(id);
+
+        if(findEvent.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        EventResource eventResource = new EventResource(findEvent.get());
+        eventResource.add(new Link("/docs/index.html#resources-event-get").withRel("profile"));
+        return ResponseEntity.ok(eventResource);
+    }
+
 
     private ResponseEntity badRequest(Errors errors) {
         return ResponseEntity.badRequest().body(new ErrorsResource(errors));
