@@ -238,9 +238,9 @@ public class EventControllerTests {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("page").exists())
-                .andExpect(jsonPath("_embedded.eventList[0]._links.self").exists())
-                .andExpect(jsonPath("_link.self").exists())
-                .andExpect(jsonPath("_link.profile").exists())
+                .andExpect(jsonPath("_embedded.eventResourceList[0]._links.self").exists())
+                .andExpect(jsonPath("_links.self").exists())
+                .andExpect(jsonPath("_links.profile").exists())
                 .andDo(document("query-events"))
         ;
 
