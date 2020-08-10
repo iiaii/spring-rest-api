@@ -2,6 +2,7 @@ package me.iiaii.demoinflearnrestapi.config;
 
 import lombok.RequiredArgsConstructor;
 import me.iiaii.demoinflearnrestapi.accounts.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,15 +15,18 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 
 @Configuration
 @EnableAuthorizationServer
-@RequiredArgsConstructor
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
+    @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
     AccountService accountService;
 
+    @Autowired
     TokenStore tokenStore;
 
     @Override
