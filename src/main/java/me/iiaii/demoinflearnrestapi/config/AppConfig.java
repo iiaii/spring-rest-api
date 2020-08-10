@@ -3,6 +3,7 @@ package me.iiaii.demoinflearnrestapi.config;
 import me.iiaii.demoinflearnrestapi.accounts.Account;
 import me.iiaii.demoinflearnrestapi.accounts.AccountRole;
 import me.iiaii.demoinflearnrestapi.accounts.AccountService;
+import me.iiaii.demoinflearnrestapi.common.AppProperties;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -27,22 +28,32 @@ public class AppConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-//    @Bean
-//    public ApplicationRunner applicationRunner() {
-//        return new ApplicationRunner() {
-//
-//            @Autowired
-//            AccountService accountService;
-//
-//            @Override
-//            public void run(ApplicationArguments args) throws Exception {
-//                Account iiaii = Account.builder()
-//                        .email("iiaii@email.com")
-//                        .password("iiaii")
-//                        .roles(Set.of(AccountRole.ADMIN, AccountRole.USER))
-//                        .build();
-//                accountService.saveAccount(iiaii);
-//            }
-//        };
-//    }
+    @Bean
+    public ApplicationRunner applicationRunner() {
+        return new ApplicationRunner() {
+
+            @Autowired
+            AccountService accountService;
+
+            @Autowired
+            AppProperties appProperties;
+
+            @Override
+            public void run(ApplicationArguments args) throws Exception {
+                Account admin = Account.builder()
+                        .email(appProperties.getAdminUsername())
+                        .password(appProperties.getAdminPassword())
+                        .roles(Set.of(AccountRole.ADMIN, AccountRole.USER))
+                        .build();
+
+                Account user = Account.builder()
+                        .email(appProperties.getUserUsername())
+                        .password(appProperties.getUserPassword())
+                        .roles(Set.of(AccountRole.USER))
+                        .build();
+                accountService.saveAccount(admin);
+                accountService.saveAccount(user);
+            }
+        };
+    }
 }

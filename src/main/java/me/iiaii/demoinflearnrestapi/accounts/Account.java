@@ -13,6 +13,7 @@ public class Account {
     @Id @GeneratedValue
     private Integer id;
 
+    @Column(unique = true)  // 저장할때 이미 있으면 걸러짐
     private String email;
 
     private String password;

@@ -4,6 +4,7 @@ import me.iiaii.demoinflearnrestapi.accounts.Account;
 import me.iiaii.demoinflearnrestapi.accounts.AccountRepository;
 import me.iiaii.demoinflearnrestapi.accounts.AccountRole;
 import me.iiaii.demoinflearnrestapi.accounts.AccountService;
+import me.iiaii.demoinflearnrestapi.common.AppProperties;
 import me.iiaii.demoinflearnrestapi.common.BaseControllerTest;
 import me.iiaii.demoinflearnrestapi.common.TestDescription;
 import org.junit.Before;
@@ -40,6 +41,9 @@ public class EventControllerTests extends BaseControllerTest {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    AppProperties appProperties;
 
     @Before
     public void setUp() {
@@ -144,25 +148,20 @@ public class EventControllerTests extends BaseControllerTest {
 
     private String getAccessToken() throws Exception {
         // given
-        String username = "iiaii@email.com";
-        String password = "iiaii";
-        Account iiaii = Account.builder()
-                .email(username)
-                .password(password)
+        Account user = Account.builder()
+                .email(appProperties.getUserUsername())
+                .password(appProperties.getUserPassword())
                 .roles(Set.of(AccountRole.ADMIN, AccountRole.USER))
                 .build();
-        this.accountService.saveAccount(iiaii);
-
-        String clientId = "myApp";
-        String clientSecret = "pass";
+        this.accountService.saveAccount(user);
 
 
         // when
         // then
         ResultActions perform = this.mockMvc.perform(post("/oauth/token")
-                .with(httpBasic(clientId, clientSecret))
-                .param("username", username)
-                .param("password", password)
+                .with(httpBasic(appProperties.getClientId(), appProperties.getClientSecret()))
+                .param("username", appProperties.getUserUsername())
+                .param("password", appProperties.getUserPassword())
                 .param("grant_type", "password"));
 
         var responseBody = perform.andReturn().getResponse().getContentAsString();
