@@ -51,6 +51,7 @@ public class AppConfig {
                         .password(appProperties.getUserPassword())
                         .roles(Set.of(AccountRole.USER))
                         .build();
+
                 accountService.saveAccount(admin);
                 accountService.saveAccount(user);
             }
