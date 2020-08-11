@@ -2,7 +2,7 @@ package me.iiaii.demoinflearnrestapi.events;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
