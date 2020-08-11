@@ -357,7 +357,6 @@ public class EventControllerTests extends BaseControllerTest {
 
 
         // then
-
     }
 
 

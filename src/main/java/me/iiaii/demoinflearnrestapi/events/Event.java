@@ -1,8 +1,10 @@
 package me.iiaii.demoinflearnrestapi.events;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import me.iiaii.demoinflearnrestapi.accounts.Account;
+import me.iiaii.demoinflearnrestapi.accounts.AccountSerializer;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
@@ -34,6 +36,7 @@ public class Event extends RepresentationModel<Event> {
     private EventStatus eventStatus = EventStatus.DRAFT;
 
     @ManyToOne
+    @JsonSerialize(using = AccountSerializer.class)
     private Account manager;
 
     public void update() {
