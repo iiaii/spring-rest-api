@@ -34,7 +34,7 @@ public class Event extends RepresentationModel<Event> {
     private EventStatus eventStatus = EventStatus.DRAFT;
 
     @ManyToOne
-    private Account manage;
+    private Account manager;
 
     public void update() {
         this.free = this.basePrice == 0 && this.maxPrice == 0;
