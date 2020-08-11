@@ -47,8 +47,8 @@ public class EventControllerTests extends BaseControllerTest {
 
     @Before
     public void setUp() {
-        this.accountRepository.deleteAll();
         this.eventRepository.deleteAll();
+        this.accountRepository.deleteAll();
     }
 
     @Test
@@ -142,19 +142,23 @@ public class EventControllerTests extends BaseControllerTest {
         ;
     }
 
+//    private String getBearerToken() throws Exception {
+//        return "Bearer "+getAccessToken();
+//    }
+
     private String getBearerToken() throws Exception {
-        return "Bearer "+getAccessToken();
+        return "Bearer "+getAccessToken(true);
     }
 
-    private String getAccessToken() throws Exception {
-        // given
-        Account user = Account.builder()
-                .email(appProperties.getUserUsername())
-                .password(appProperties.getUserPassword())
-                .roles(Set.of(AccountRole.ADMIN, AccountRole.USER))
-                .build();
-        this.accountService.saveAccount(user);
+    private String getBearerToken(boolean needToCreateAccount) throws Exception {
+        return "Bearer "+getAccessToken(needToCreateAccount);
+    }
 
+    private String getAccessToken(boolean needToCreateAccount) throws Exception {
+        // given
+        if (needToCreateAccount) {
+            createAccount();
+        }
 
         // when
         // then
@@ -168,6 +172,15 @@ public class EventControllerTests extends BaseControllerTest {
         Jackson2JsonParser parser = new Jackson2JsonParser();
 
         return parser.parseMap(responseBody).get("access_token").toString();
+    }
+
+    private Account createAccount() {
+        Account user = Account.builder()
+                .email(appProperties.getUserUsername())
+                .password(appProperties.getUserPassword())
+                .roles(Set.of(AccountRole.ADMIN, AccountRole.USER))
+                .build();
+        return this.accountService.saveAccount(user);
     }
 
     @Test
@@ -308,7 +321,8 @@ public class EventControllerTests extends BaseControllerTest {
     @TestDescription("기존의 이벤트 하나 조회하기")
     public void getEvent() throws Exception {
         // given
-        Event event = this.generateEvent(100);
+        Account account = this.createAccount();
+        Event event = this.generateEvent(100, account);
 
         // when
         // then
@@ -337,7 +351,8 @@ public class EventControllerTests extends BaseControllerTest {
     @TestDescription("이벤트 수정 하기")
     public void updateEvent() throws Exception {
         // given
-        Event event = this.generateEvent(10);
+        Account account = this.createAccount();
+        Event event = this.generateEvent(10, account);
 
         String eventName = "Update Event";
         EventDto eventDto = this.modelMapper.map(event, EventDto.class);
@@ -345,7 +360,7 @@ public class EventControllerTests extends BaseControllerTest {
 
         // when
         this.mockMvc.perform(put("/api/events/{id}", event.getId())
-                .header(HttpHeaders.AUTHORIZATION, getBearerToken())
+                .header(HttpHeaders.AUTHORIZATION, getBearerToken(false))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(eventDto)))
                 .andDo(print())
@@ -419,9 +434,18 @@ public class EventControllerTests extends BaseControllerTest {
         ;
     }
 
-
+    private Event generateEvent(int index, Account account) {
+        Event event = buildEvent(index);
+        event.setManager(account);
+        return this.eventRepository.save(event);
+    }
 
     private Event generateEvent(int index) {
+        Event event = buildEvent(index);
+        return this.eventRepository.save(event);
+    }
+
+        private Event buildEvent(int index) {
         Event event = Event.builder()
                 .name("Spring"+index)
                 .description("test event")

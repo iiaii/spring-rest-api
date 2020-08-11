@@ -131,7 +131,6 @@ public class EventController {
         }
 
         Event event = findEvent.get();
-
         if (!event.getManager().equals(currentUser)) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
